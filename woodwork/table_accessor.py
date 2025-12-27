@@ -4,6 +4,7 @@ import weakref
 from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Set, Union
 
 import pandas as pd
+import narwhals as nw
 
 from woodwork.accessor_utils import (
     _check_table_schema,
@@ -1714,10 +1715,10 @@ def _check_index(dataframe, index):
         )
     if index is not None:
         # User specifies a dataframe index that is not unique or contains null values
-        if not dataframe[index].is_unique:
+        if not dataframe.get_column(index).is_unique().all():
             raise IndexError("Index column must be unique")
 
-        if dataframe[index].isnull().any():
+        if dataframe.get_column(index).is_null().any():
             raise IndexError("Index contains null values")
 
 
@@ -1764,8 +1765,7 @@ def _check_ignore_columns(dataframe_columns, logical_types, schema, ignore_colum
             )
     if schema is None:
         raise WoodworkNotInitError(
-            "ignore_columns cannot be set when the dataframe has no existing "
-            "schema.",
+            "ignore_columns cannot be set when the dataframe has no existing schema.",
         )
 
 
@@ -1864,3 +1864,13 @@ def _merge_use_standard_tags(
 @pd.api.extensions.register_dataframe_accessor("ww")
 class PandasTableAccessor(WoodworkTableAccessor):
     pass
+
+
+# @nw.api.register_dataframe_namespace("ww")
+class NarwhalsDataFrameAccessor(WoodworkTableAccessor):
+    pass  # TODO
+
+
+# @nw.api.register_lazyframe_namespace("ww")
+class NarwhalsLazyFrameAccessor(WoodworkTableAccessor):
+    pass  # TODO

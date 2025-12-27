@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
+import narwhals as nw
 
 from woodwork.logical_types import (
     URL,
@@ -21,7 +22,7 @@ from woodwork.logical_types import (
 
 @pytest.fixture()
 def sample_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "id": range(4),
             "full_name": [
@@ -66,6 +67,8 @@ def sample_df():
             ],
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
@@ -123,12 +126,13 @@ def comprehensive_df():
         "01-03-00",
         pd.NA,
     ] * 100
+    df = nw.from_native(df)
     return df
 
 
 @pytest.fixture()
 def sample_df_phone_numbers():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "phone_number": [
                 "2002007865",
@@ -152,11 +156,13 @@ def sample_df_phone_numbers():
             ],
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
 def sample_df_postal_code():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "postal_code": [
                 "20020",
@@ -166,11 +172,13 @@ def sample_df_postal_code():
             ],
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
 def datetime_freqs_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "2D_freq": pd.date_range(start="2020-01-01", end="2020-01-20", freq="2D"),
             "3M_freq": pd.date_range(start="2015-01-01", freq="3M", periods=10),
@@ -196,6 +204,8 @@ def datetime_freqs_df():
             "same_date": ["2015-01-01"] * 10,
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
@@ -233,7 +243,7 @@ def datetime_different_formats():
 
 @pytest.fixture()
 def sample_unsorted_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "id": [3, 1, 2, 0],
             "full_name": [
@@ -261,6 +271,8 @@ def sample_unsorted_df():
             "is_registered": [True, False, True, True],
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
@@ -286,7 +298,7 @@ def ordinal_transform_series():
 
 @pytest.fixture()
 def time_index_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "id": [0, 1, 2, 3],
             "times": ["2019-01-01", "2019-01-02", "2019-01-03", pd.NA],
@@ -296,17 +308,21 @@ def time_index_df():
             "bools": [True, False, False, True],
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
 def numeric_time_index_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "floats": pd.Series([1, 2, 3, 4], dtype="float"),
             "ints": pd.Series([1, -2, 3, 4], dtype="int64"),
             "with_null": pd.Series([1, pd.NA, 3, 4], dtype="Int64"),
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
@@ -371,7 +387,7 @@ def describe_df():
         "unknown5",
     ]
 
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "index_col": index_data,
             "boolean_col": boolean_data,
@@ -385,11 +401,13 @@ def describe_df():
             "unknown_col": unknown_data,
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
 def df_same_mi():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "ints": pd.Series([2, pd.NA, 5, 2], dtype="Int64"),
             "floats": pd.Series([1, None, 100, 1]),
@@ -404,6 +422,8 @@ def df_same_mi():
             ),
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
@@ -419,6 +439,7 @@ def df_mi():
         },
     )
     df = df.loc[df.index.repeat(4)].reset_index(drop=True)
+    df = nw.from_native(df)
     return df
 
 
@@ -433,12 +454,13 @@ def df_mi_unique():
         },
     )
     df = df.loc[df.index.repeat(5)].reset_index(drop=True)
+    df = nw.from_native(df)
     return df
 
 
 @pytest.fixture()
 def categorical_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "ints": pd.Series([1, 2, 3, 2]),
             "categories1": pd.Series([1, 100, 1, 100, 200, 200, 200, 200, 3, 100]),
@@ -447,26 +469,32 @@ def categorical_df():
             "categories3": pd.Series(["test", "test", "test", np.nan]),
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
 def empty_df():
-    return pd.DataFrame({})
+    df = pd.DataFrame({})
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
 def small_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         pd.Series(
             [pd.to_datetime("2020-09-01")] * 4,
             name="sample_datetime_series",
         ).astype("object"),
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture
 def latlong_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "tuple_ints": pd.Series([(1, 2), (3, 4)]),
             "tuple_strings": pd.Series([("1", "2"), ("3", "4")]),
@@ -479,11 +507,15 @@ def latlong_df():
             "both_null": pd.Series([(np.nan, np.nan), (3.0, 4.0)]),
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
 def empty_latlong_df():
-    return pd.DataFrame({"latlong": []}, dtype="object")
+    df = pd.DataFrame({"latlong": []}, dtype="object")
+    df = nw.from_native(df)
+    return df
 
 
 # LatLong Fixtures for testing access to latlong values
@@ -503,7 +535,7 @@ def latlongs():
 
 @pytest.fixture()
 def whitespace_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "id": [0, 1, 2, 3, 4, 5],
             "comments": [
@@ -516,16 +548,20 @@ def whitespace_df():
             ],
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
 def falsy_names_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             0: ["a", "b", "c"],
             "": [1, 2, 3],
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
@@ -590,6 +626,7 @@ def serialize_df():
             "ord_bool": [True, False, True],
         },
     )
+    df = nw.from_native(df)
     return df
 
 
@@ -603,7 +640,7 @@ def datetimes():
 
 @pytest.fixture()
 def outliers_df():
-    return pd.DataFrame(
+    df = pd.DataFrame(
         {
             "has_outliers": [93, 42, 37, -16, 49, 42, 36, 57, 60, 23],
             "no_outliers": [60, 42, 37, 23, 49, 42, 36, 57, 60, 23.0],
@@ -612,6 +649,8 @@ def outliers_df():
             "nans": pd.Series([None] * 10, dtype="float64"),
         },
     )
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
@@ -652,6 +691,7 @@ def skewed_outliers_df():
         },
     )
     outliers_df["left_skewed_outliers"] = 31 - outliers_df["right_skewed_outliers"]
+    outliers_df = nw.from_native(outliers_df)
     return outliers_df
 
 
@@ -699,7 +739,7 @@ def timezones_df():
         "utc_2": "object",
         "eastern_2": "object",
     }
-    return pd.DataFrame(
+    df = pd.DataFrame(
         data=[
             [
                 "2022-01-01",
@@ -721,6 +761,8 @@ def timezones_df():
         ],
         columns=["default_1", "utc_1", "eastern_1", "default_2", "utc_2", "eastern_2"],
     ).astype(dtypes)
+    df = nw.from_native(df)
+    return df
 
 
 @pytest.fixture()
