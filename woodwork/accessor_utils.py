@@ -1,5 +1,6 @@
 from functools import wraps
 
+import narwhals as nw
 import numpy as np
 import pandas as pd
 
@@ -70,15 +71,11 @@ def init_series(
 
 
 def _is_series(data):
-    if isinstance(data, pd.Series):
-        return True
-    return False
+    return isinstance(data, nw.Series)
 
 
 def _is_dataframe(data):
-    if isinstance(data, pd.DataFrame):
-        return True
-    return False
+    return isinstance(data, nw.DataFrame) or isinstance(data, nw.LazyFrame)
 
 
 def get_invalid_schema_message(dataframe, schema):
