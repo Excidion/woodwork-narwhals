@@ -1,7 +1,7 @@
+import narwhals as nw
 import numpy as np
 import pandas as pd
 import pytest
-import narwhals as nw
 
 from woodwork.logical_types import (
     URL,
@@ -767,4 +767,5 @@ def timezones_df():
 
 @pytest.fixture()
 def postal_code_numeric_series():
-    return pd.Series([77449.0, 11368.0, np.nan, 60629.0, 79936.0, 1234567890.0])
+    series = pd.Series([77449.0, 11368.0, np.nan, 60629.0, 79936.0, 1234567890.0])
+    return nw.from_native(series)

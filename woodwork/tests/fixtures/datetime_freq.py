@@ -1,3 +1,4 @@
+import narwhals as nw
 import numpy as np
 import pandas as pd
 
@@ -66,7 +67,7 @@ def pad_datetime_series(dates, freq, pad_start=0, pad_end=100):
     df = pd.concat([head, pd.Series(dates), tail]).reset_index(drop=True)
     df = pd.to_datetime(df, utc=True)
 
-    return df
+    return nw.from_native(df)
 
 
 def generate_pandas_inferrable():
