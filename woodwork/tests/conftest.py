@@ -277,23 +277,26 @@ def sample_unsorted_df():
 
 @pytest.fixture()
 def sample_series():
-    return pd.Series(
+    series = pd.Series(
         ["a", "b", "c"] + 10 * ["a", "a", "a"],
         name="sample_series",
     ).astype("category")
+    return nw.from_native(series)
 
 
 @pytest.fixture()
 def sample_datetime_series():
-    return pd.Series(
+    series = pd.Series(
         [pd.to_datetime("2020-09-01")] * 4,
         name="sample_datetime_series",
     ).astype("object")
+    return nw.from_native(series)
 
 
 @pytest.fixture()
 def ordinal_transform_series():
-    return pd.Series([1, 2, 3], dtype="int64")
+    series = pd.Series([1, 2, 3], dtype="int64")
+    return nw.from_native(series)
 
 
 @pytest.fixture()
