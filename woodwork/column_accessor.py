@@ -3,6 +3,7 @@ import warnings
 import weakref
 from typing import Dict, Optional, Union
 
+import narwhals as nw
 import pandas as pd
 from pandas.api import types as pdtypes
 
@@ -577,3 +578,12 @@ def _validate_schema(schema, series):
 @pd.api.extensions.register_series_accessor("ww")
 class PandasColumnAccessor(WoodworkColumnAccessor):
     pass
+
+
+def _register_ww_columnccessor(self):
+    if "ww" not in self.__dict__:
+        self.__dict__["ww"] = WoodworkColumnAccessor(self)
+    return self.__dict__["ww"]
+
+
+nw.Series.ww = property(_register_ww_columnccessor)

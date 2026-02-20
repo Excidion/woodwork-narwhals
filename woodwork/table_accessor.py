@@ -3,8 +3,8 @@ import warnings
 import weakref
 from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Set, Union
 
-import pandas as pd
 import narwhals as nw
+import pandas as pd
 
 from woodwork.accessor_utils import (
     _check_table_schema,
@@ -1866,11 +1866,11 @@ class PandasTableAccessor(WoodworkTableAccessor):
     pass
 
 
-# @nw.api.register_dataframe_namespace("ww")
-class NarwhalsDataFrameAccessor(WoodworkTableAccessor):
-    pass  # TODO
+def _register_ww_tableaccessor(self):
+    if "ww" not in self.__dict__:
+        self.__dict__["ww"] = WoodworkTableAccessor(self)
+    return self.__dict__["ww"]
 
 
-# @nw.api.register_lazyframe_namespace("ww")
-class NarwhalsLazyFrameAccessor(WoodworkTableAccessor):
-    pass  # TODO
+nw.LazyFrame.ww = property(_register_ww_tableaccessor)
+nw.DataFrame.ww = property(_register_ww_tableaccessor)
