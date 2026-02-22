@@ -40,7 +40,7 @@ class LogicalType(object, metaclass=LogicalTypeMetaClass):
     """Base class for all other Logical Types"""
 
     type_string = ClassNameDescriptor()
-    primary_dtype = "string"
+    primary_dtype = "String"
     standard_tags = set()
 
     def __eq__(self, other, deep=False):
@@ -88,7 +88,7 @@ class Address(LogicalType):
             ['26387 Russell Hill, Dallas, TX 34521', '54305 Oxford Street, Seattle, WA 95132']
     """
 
-    primary_dtype = "string"
+    primary_dtype = "String"
 
 
 class Age(LogicalType):
@@ -102,7 +102,7 @@ class Age(LogicalType):
             [30, 62, 87]
     """
 
-    primary_dtype = "int64"
+    primary_dtype = "Int64"
     standard_tags = {"numeric"}
 
     def validate(self, series, return_invalid_values=True):
@@ -129,7 +129,7 @@ class AgeFractional(LogicalType):
             [30.5, 62.82, np.nan]
     """
 
-    primary_dtype = "float64"
+    primary_dtype = "Float64"
     standard_tags = {"numeric"}
 
     def transform(self, series, null_invalid_values=False):
@@ -237,7 +237,7 @@ class BooleanNullable(LogicalType):
             [0, 1, 1]
     """
 
-    primary_dtype = "boolean"
+    primary_dtype = "Boolean"
 
     def transform(self, series, null_invalid_values=False):
         series = _replace_nans(series, self.primary_dtype)
@@ -257,7 +257,7 @@ class Categorical(LogicalType):
             [3, 1, 2]
     """
 
-    primary_dtype = "category"
+    primary_dtype = "Categorical"
     standard_tags = {"category"}
 
     def __init__(self, encoding=None):
@@ -277,7 +277,7 @@ class CountryCode(LogicalType):
             ["GB", "NZ", "DE"]
     """
 
-    primary_dtype = "category"
+    primary_dtype = "Categorical"
     standard_tags = {"category"}
 
 
@@ -291,7 +291,7 @@ class CurrencyCode(LogicalType):
             ["SAR", "EUR", "CZK"]
     """
 
-    primary_dtype = "category"
+    primary_dtype = "Categorical"
     standard_tags = {"category"}
 
 
@@ -309,7 +309,7 @@ class Datetime(LogicalType):
              "01/01/2000 08:30"]
     """
 
-    primary_dtype = "datetime64[ns]"
+    primary_dtype = "Datetime"
     datetime_format = None
 
     def __init__(self, datetime_format=None, timezone=None):
@@ -381,7 +381,7 @@ class Double(LogicalType):
             [-15.34, 100, 58.3]
     """
 
-    primary_dtype = "float64"
+    primary_dtype = "Float64"
     standard_tags = {"numeric"}
 
     def transform(self, series, null_invalid_values=False):
@@ -403,7 +403,7 @@ class Integer(LogicalType):
             [-54, 73, 11]
     """
 
-    primary_dtype = "int64"
+    primary_dtype = "Int64"
     standard_tags = {"numeric"}
 
 
@@ -450,7 +450,7 @@ class EmailAddress(LogicalType):
              "team@example.com"]
     """
 
-    primary_dtype = "string"
+    primary_dtype = "String"
 
     def transform(self, series, null_invalid_values=False):
         if null_invalid_values:
@@ -482,7 +482,7 @@ class Filepath(LogicalType):
              "/tmp"]
     """
 
-    primary_dtype = "string"
+    primary_dtype = "String"
 
 
 class PersonFullName(LogicalType):
@@ -497,7 +497,7 @@ class PersonFullName(LogicalType):
              "James Brown"]
     """
 
-    primary_dtype = "string"
+    primary_dtype = "String"
 
 
 class IPAddress(LogicalType):
@@ -512,7 +512,7 @@ class IPAddress(LogicalType):
              "2001:0db8:0000:0000:0000:ff00:0042:8329"]
     """
 
-    primary_dtype = "string"
+    primary_dtype = "String"
 
 
 class LatLong(LogicalType):
@@ -534,7 +534,7 @@ class LatLong(LogicalType):
              (-45.031705, nan)]
     """
 
-    primary_dtype = "object"
+    primary_dtype = "Array"
 
     def transform(self, series, null_invalid_values=False):
         """Formats a series to be a tuple of two floats."""
@@ -567,7 +567,7 @@ class NaturalLanguage(LogicalType):
              "When will humans go to mars?"]
     """
 
-    primary_dtype = "string"
+    primary_dtype = "String"
 
 
 class Unknown(LogicalType):
@@ -582,7 +582,7 @@ class Unknown(LogicalType):
 
     """
 
-    primary_dtype = "string"
+    primary_dtype = "String"
 
 
 class Ordinal(LogicalType):
@@ -601,7 +601,7 @@ class Ordinal(LogicalType):
             ["bronze", "silver", "gold"]
     """
 
-    primary_dtype = "category"
+    primary_dtype = "Categorical"
     standard_tags = {"category"}
 
     def __init__(self, order=None):
@@ -657,7 +657,7 @@ class PhoneNumber(LogicalType):
              "5551235495"]
     """
 
-    primary_dtype = "string"
+    primary_dtype = "String"
 
     def transform(self, series, null_invalid_values=False):
         if null_invalid_values:
@@ -690,7 +690,7 @@ class SubRegionCode(LogicalType):
             ["AU-NSW", "AU-TAS", "AU-QLD"]
     """
 
-    primary_dtype = "category"
+    primary_dtype = "Categorical"
     standard_tags = {"category"}
 
 
@@ -705,7 +705,7 @@ class Timedelta(LogicalType):
              pd.Timedelta('4 days 12:00:00')]
     """
 
-    primary_dtype = "timedelta64[ns]"
+    primary_dtype = "Duration"
 
 
 class URL(LogicalType):
@@ -720,7 +720,7 @@ class URL(LogicalType):
              "example.com"]
     """
 
-    primary_dtype = "string"
+    primary_dtype = "String"
 
     def transform(self, series, null_invalid_values=False):
         if null_invalid_values:
@@ -752,7 +752,7 @@ class PostalCode(LogicalType):
              "10010"]
     """
 
-    primary_dtype = "category"
+    primary_dtype = "Categorical"
     standard_tags = {"category"}
 
     def transform(self, series, null_invalid_values=False):
