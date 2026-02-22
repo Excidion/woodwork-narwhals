@@ -197,7 +197,7 @@ class Boolean(LogicalType):
             [0, 1, 1]
     """
 
-    primary_dtype = "bool"
+    primary_dtype = "Boolean"
 
     def __init__(self, cast_nulls_as=None):
         if cast_nulls_as and not isinstance(cast_nulls_as, bool):
