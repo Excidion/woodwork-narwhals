@@ -30,10 +30,7 @@ from woodwork.logical_types import (
     PostalCode,
     SubRegionCode,
 )
-from woodwork.tests.testing_utils import (
-    is_property,
-    is_public_method,
-)
+from woodwork.tests.testing_utils import copy_series, is_property, is_public_method
 
 
 def test_accessor_init(sample_series):
@@ -213,12 +210,12 @@ def test_error_accessing_methods_before_init(sample_series):
 
 
 def test_accessor_with_alternate_semantic_tags_input(sample_series):
-    series = sample_series.copy()
+    series = copy_series(sample_series)
     semantic_tags = "custom_tag"
     series.ww.init(semantic_tags=semantic_tags, use_standard_tags=False)
     assert series.ww.semantic_tags == {"custom_tag"}
 
-    series = sample_series.copy()
+    series = copy_series(sample_series)
     semantic_tags = {"custom_tag", "numeric"}
     series.ww.init(semantic_tags=semantic_tags, use_standard_tags=False)
     assert series.ww.semantic_tags == semantic_tags
@@ -451,7 +448,7 @@ def test_remove_semantic_tags(sample_series):
     tags_to_remove = ["tag1", ["tag1"], {"tag1"}]
 
     for tag in tags_to_remove:
-        series = sample_series.copy()
+        series = copy_series(sample_series)
         series.ww.init(semantic_tags=["tag1", "tag2"], use_standard_tags=True)
         series.ww.remove_semantic_tags(tag)
         assert series.ww.semantic_tags == {"tag2", "category"}
@@ -460,7 +457,7 @@ def test_remove_semantic_tags(sample_series):
 def test_series_methods_on_accessor(sample_series):
     sample_series.ww.init()
 
-    copied_series = sample_series.ww.copy()
+    copied_series = copy_series(sample_series)
     assert copied_series is not sample_series
     assert copied_series.ww.schema == sample_series.ww.schema
     pd.testing.assert_series_equal(sample_series, copied_series)
@@ -469,7 +466,7 @@ def test_series_methods_on_accessor(sample_series):
 def test_series_methods_on_accessor_without_standard_tags(sample_series):
     sample_series.ww.init(use_standard_tags=False)
 
-    copied_series = sample_series.ww.copy()
+    copied_series = copy_series(sample_series)
     assert copied_series is not sample_series
     assert copied_series.ww.schema == sample_series.ww.schema
     pd.testing.assert_series_equal(sample_series, copied_series)
@@ -502,7 +499,7 @@ def test_series_methods_on_accessor_dtype_mismatch(sample_df):
 
 
 def test_series_methods_on_accessor_inplace(sample_series):
-    comparison_series = sample_series.copy()
+    comparison_series = copy_series(sample_series)
 
     sample_series.ww.init()
     comparison_series.ww.init()
@@ -550,7 +547,7 @@ def test_series_methods_on_accessor_new_schema_object(sample_series):
         metadata={"important_keys": [1, 2, 3]},
     )
 
-    copied_series = sample_series.ww.copy()
+    copied_series = copy_series(sample_series)
 
     assert copied_series.ww._schema == sample_series.ww._schema
     assert copied_series.ww._schema is not sample_series.ww._schema
@@ -596,13 +593,13 @@ def test_ordinal_requires_instance_on_update(sample_series):
 
 
 def test_ordinal_with_order(sample_series):
-    series = sample_series.copy()
+    series = copy_series(sample_series)
     ordinal_with_order = Ordinal(order=["a", "b", "c"])
     series.ww.init(logical_type=ordinal_with_order)
     assert isinstance(series.ww.logical_type, Ordinal)
     assert series.ww.logical_type.order == ["a", "b", "c"]
 
-    series = sample_series.copy()
+    series = copy_series(sample_series)
     series.ww.init(logical_type="Categorical")
     new_series = series.ww.set_logical_type(ordinal_with_order)
     assert isinstance(new_series.ww.logical_type, Ordinal)
@@ -657,16 +654,16 @@ def test_latlong_formatting_with_init_series(latlongs):
 
 def test_accessor_equality(sample_series):
     # Check different parameters
-    str_col = sample_series.copy()
+    str_col = copy_series(sample_series)
     str_col.ww.init(logical_type="Categorical")
 
-    str_col_2 = sample_series.copy()
+    str_col_2 = copy_series(sample_series)
     str_col_2.ww.init(logical_type=Categorical)
 
-    str_col_diff_tags = sample_series.copy()
+    str_col_diff_tags = copy_series(sample_series)
     str_col_diff_tags.ww.init(logical_type=Categorical, semantic_tags={"test"})
 
-    diff_name_col = sample_series.copy()
+    diff_name_col = copy_series(sample_series)
     diff_name_col.name = "different_name"
     diff_name_col.ww.init(logical_type=Categorical)
 
@@ -681,7 +678,8 @@ def test_accessor_equality(sample_series):
     # Check different underlying series
     str_col = sample_series.astype("string")
     str_col.ww.init(logical_type="NaturalLanguage")
-    changed_series = sample_series.copy().replace(to_replace="a", value="test")
+    changed_series = copy_series(sample_series)
+    changed_series = changed_series.replace(to_replace="a", value="test")
     changed_series = changed_series.astype("string")
     changed_series.ww.init(logical_type="NaturalLanguage")
 
@@ -690,12 +688,12 @@ def test_accessor_equality(sample_series):
 
 def test_accessor_shallow_equality(sample_series):
     metadata_col = init_series(
-        sample_series.copy(),
+        copy_series(sample_series),
         logical_type="NaturalLanguage",
         metadata={"interesting_values": ["a", "b"]},
     )
     diff_metadata_col = init_series(
-        sample_series.copy(),
+        copy_series(sample_series),
         logical_type="NaturalLanguage",
         metadata={"interesting_values": ["c"]},
     )
@@ -709,7 +707,7 @@ def test_accessor_shallow_equality(sample_series):
     diff_data_col = diff_data_col.astype("string")
 
     diff_data_col.ww.init(schema=schema)
-    same_data_col = metadata_col.ww.copy()
+    same_data_col = metadata_col.ww.to_frame().clone().get_column(metadata_col.name)
 
     assert diff_data_col.ww.schema.__eq__(metadata_col.ww.schema, deep=True)
     assert same_data_col.ww.schema.__eq__(metadata_col.ww.schema, deep=True)
@@ -723,11 +721,11 @@ def test_accessor_shallow_equality(sample_series):
 def test_accessor_metadata(sample_series):
     column_metadata = {"metadata_field": [1, 2, 3], "created_by": "user0"}
 
-    series = sample_series.copy()
+    series = copy_series(sample_series)
     series.ww.init()
     assert series.ww.metadata == {}
 
-    series = sample_series.copy()
+    series = copy_series(sample_series)
     series.ww.init(metadata=column_metadata)
     assert series.ww.metadata == column_metadata
 
@@ -801,12 +799,12 @@ def test_schema_property(sample_series):
 def test_validation_methods_called_init(mock_validate, sample_series):
     assert not mock_validate.called
 
-    not_validated = sample_series.copy()
+    not_validated = copy_series(sample_series)
     not_validated.ww.init(validate=False)
 
     assert not mock_validate.called
 
-    validated = sample_series.copy()
+    validated = copy_series(sample_series)
     validated.ww.init(validate=True)
 
     assert not mock_validate.called
@@ -818,12 +816,12 @@ def test_validation_methods_called_init(mock_validate, sample_series):
 def test_ordinal_validation_methods_called_init(mock_validate, sample_series):
     assert not mock_validate.called
 
-    not_validated = sample_series.copy()
+    not_validated = copy_series(sample_series)
     not_validated.ww.init(logical_type=Ordinal(order=["a", "b", "c"]), validate=False)
 
     assert not mock_validate.called
 
-    validated = sample_series.copy()
+    validated = copy_series(sample_series)
     validated.ww.init(logical_type=Ordinal(order=["a", "b", "c"]), validate=True)
 
     assert mock_validate.called
@@ -836,12 +834,12 @@ def test_latlong_validation_methods_called_init(mock_validate, latlong_df):
     assert not mock_validate.called
 
     latlong_series = latlong_df["null_latitude"]
-    not_validated = latlong_series.copy()
+    not_validated = copy_series(latlong_series)
     not_validated.ww.init(LatLong, validate=False)
 
     assert not mock_validate.called
 
-    validated = latlong_series.copy()
+    validated = copy_series(latlong_series)
     validated.ww.init(LatLong, validate=True)
 
     assert mock_validate.called
@@ -855,16 +853,16 @@ def test_validation_methods_called_init_with_schema(
     sample_series,
 ):
     assert not mock_validate_schema.called
-    schema_series = sample_series.copy()
+    schema_series = copy_series(sample_series)
     schema_series.ww.init()
     schema = schema_series.ww.schema
 
-    not_validated = sample_series.copy()
+    not_validated = copy_series(sample_series)
     not_validated.ww.init(schema=schema, validate=False)
 
     assert not mock_validate_schema.called
 
-    validated = sample_series.copy()
+    validated = copy_series(sample_series)
     validated.ww.init(schema=schema, validate=True)
 
     assert mock_validate_schema.called

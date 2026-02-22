@@ -53,7 +53,7 @@ def test_error_before_column_init(sample_series):
 
 
 def test_iloc_column(sample_series):
-    series = sample_series.copy()
+    series = sample_series.to_frame().clone().get_column(sample_series.name)
     logical_type = Categorical
     semantic_tags = ["tag1", "tag2"]
     description = "custom column description"
@@ -78,7 +78,7 @@ def test_iloc_column(sample_series):
 
     assert series.ww.iloc[0] == "a"
 
-    series = sample_series.copy()
+    series = sample_series.to_frame().clone().get_column(sample_series.name)
     series.ww.init(use_standard_tags=False)
     sliced = series.ww.iloc[:]
     assert sliced.name
@@ -112,7 +112,7 @@ def test_iloc_column_does_not_propagate_changes_to_data(sample_series):
 
 
 def test_loc_column(sample_series):
-    series = sample_series.copy()
+    series = sample_series.to_frame().clone().get_column(sample_series.name)
     logical_type = Categorical
     semantic_tags = ["tag1", "tag2"]
     series.ww.init(logical_type=logical_type, semantic_tags=semantic_tags)
@@ -126,7 +126,7 @@ def test_loc_column(sample_series):
     single_val = series.ww.loc[0]
     assert single_val == "a"
 
-    series = sample_series.copy()
+    series = sample_series.to_frame().clone().get_column(sample_series.name)
     series.ww.init(use_standard_tags=False)
     sliced = series.ww.loc[:]
     assert sliced.name

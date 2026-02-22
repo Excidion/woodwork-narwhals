@@ -18,3 +18,7 @@ def convert_tuples_to_lists(series):
         return value
 
     return series.apply(apply_func)
+
+
+def copy_series(series):
+    return series.to_frame().clone().get_column(series.name)

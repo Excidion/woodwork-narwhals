@@ -364,7 +364,7 @@ class WoodworkColumnAccessor:
         """
         # Create a new series without a schema to prevent new series from sharing a common
         # schema with current series
-        new_series = self._series.copy()
+        new_series = self._series.to_frame().clone().get_column(self._series.name)
         new_series._schema = None
         return init_series(
             new_series,

@@ -33,7 +33,7 @@ def _sample_for_medcouple(series, seed=42):
     np.random.seed(seed)
     series_size = len(series)
     if series_size < ww.config.get_option("medcouple_sample_size"):
-        series_sample = series.copy()
+        series_sample = series.to_frame().clone().get_column(series.name)
     else:
         series_sample = np.random.choice(
             series,
