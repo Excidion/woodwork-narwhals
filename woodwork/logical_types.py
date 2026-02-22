@@ -2,6 +2,7 @@ import warnings
 from datetime import datetime
 from typing import Optional
 
+import narwhals as nw
 import numpy as np
 import pandas as pd
 from pandas import CategoricalDtype
@@ -534,10 +535,14 @@ class LatLong(LogicalType):
              (-45.031705, nan)]
     """
 
-    primary_dtype = "Array"
+    primary_dtype = "object"  # TODO change to Array
 
     def transform(self, series, null_invalid_values=False):
         """Formats a series to be a tuple of two floats."""
+        # TODO handle all narwhals backends via array
+        if isinstance(series, nw.Series):
+            series = series.to_native()
+        assert isinstance(series, pd.Series), "LatLong only implemented for pandas."
         if null_invalid_values:
             series = _coerce_latlong(series)
         series = series.apply(_reformat_to_latlong)
@@ -545,6 +550,10 @@ class LatLong(LogicalType):
         return super().transform(series)
 
     def validate(self, series, return_invalid_values=False):
+        # TODO handle all narwhals backends via array
+        if isinstance(series, nw.Series):
+            series = series.to_native()
+        assert isinstance(series, pd.Series), "LatLong only implemented for pandas."
         # TODO: we'll want to actually handle return_invalid_values in the ordinal and latlong logical types.
         super().validate(series)
         if not _is_valid_latlong_series(series):
