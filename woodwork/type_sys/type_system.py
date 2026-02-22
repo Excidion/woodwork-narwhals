@@ -1,5 +1,7 @@
 from typing import Callable
 
+import narwhals as nw
+
 from woodwork.logical_types import (
     URL,
     Address,
@@ -332,11 +334,11 @@ class TypeSystem(object):
         if parent and parent not in self.registered_types:
             raise ValueError("parent must be a valid LogicalType")
 
-    def infer_logical_type(self, series):
+    def infer_logical_type(self, series: nw.Series):
         """Infer the logical type for the given series
 
         Args:
-            series (pandas.Series): The series for which to infer the LogicalType.
+            series (narwhals.Series): The series for which to infer the LogicalType.
         """
 
         def get_random_sample(series_, **kwargs):
@@ -347,8 +349,8 @@ class TypeSystem(object):
                 return series_
 
         kw_args_sampling = {
-            "replace": False,
-            "random_state": 42,
+            "with_replacement": False,
+            "seed": 42,
         }
 
         # Special case for series with no valid values
