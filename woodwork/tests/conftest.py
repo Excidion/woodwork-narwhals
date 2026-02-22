@@ -281,7 +281,7 @@ def sample_series():
         ["a", "b", "c"] + 10 * ["a", "a", "a"],
         name="sample_series",
     ).astype("category")
-    return nw.from_native(series)
+    return nw.from_native(series, series_only=True)
 
 
 @pytest.fixture()
@@ -290,13 +290,13 @@ def sample_datetime_series():
         [pd.to_datetime("2020-09-01")] * 4,
         name="sample_datetime_series",
     ).astype("object")
-    return nw.from_native(series)
+    return nw.from_native(series, series_only=True)
 
 
 @pytest.fixture()
 def ordinal_transform_series():
     series = pd.Series([1, 2, 3], dtype="int64")
-    return nw.from_native(series)
+    return nw.from_native(series, series_only=True)
 
 
 @pytest.fixture()
@@ -771,4 +771,4 @@ def timezones_df():
 @pytest.fixture()
 def postal_code_numeric_series():
     series = pd.Series([77449.0, 11368.0, np.nan, 60629.0, 79936.0, 1234567890.0])
-    return nw.from_native(series)
+    return nw.from_native(series, series_only=True)
