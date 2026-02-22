@@ -48,7 +48,7 @@ def init_series(
             isinstance(series, (np.ndarray, pd.api.extensions.ExtensionArray))
             and series.ndim == 1
         ):
-            series = pd.Series(series)
+            series = nw.from_native(pd.Series(series), series_only=True)
         elif isinstance(series, np.ndarray) and series.ndim != 1:
             raise ValueError(
                 f"np.ndarray input must be 1 dimensional. Current np.ndarray is {series.ndim} dimensional",
