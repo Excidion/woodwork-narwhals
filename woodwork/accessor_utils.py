@@ -108,7 +108,7 @@ def get_invalid_schema_message(dataframe, schema):
     logical_types = schema.logical_types
     for name in dataframe.columns:
         df_dtype = dataframe[name].dtype
-        valid_dtype = logical_types[name]._get_valid_dtype(type(dataframe[name]))
+        valid_dtype = logical_types[name]._get_valid_dtype()
         if str(df_dtype) != valid_dtype:
             return (
                 f"dtype mismatch for column {name} between DataFrame dtype, "

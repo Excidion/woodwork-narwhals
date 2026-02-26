@@ -104,7 +104,7 @@ class WoodworkColumnAccessor:
                 if isinstance(logical_type, (Ordinal, LatLong)):
                     logical_type.validate(self._series)
                 else:
-                    valid_dtype = logical_type._get_valid_dtype(type(self._series))
+                    valid_dtype = logical_type._get_valid_dtype()
                     if valid_dtype != str(self._series.dtype) and not (
                         pdtypes.is_integer_dtype(valid_dtype)
                         and pdtypes.is_float_dtype(self._series.dtype)
@@ -138,7 +138,7 @@ class WoodworkColumnAccessor:
     @_check_column_schema
     def nullable(self):
         """Whether the column can contain null values."""
-        dtype = self._schema.logical_type._get_valid_dtype(type(self._series))
+        dtype = self._schema.logical_type._get_valid_dtype()
         return dtype in _NULLABLE_PHYSICAL_TYPES
 
     @property
@@ -282,9 +282,7 @@ class WoodworkColumnAccessor:
 
                 # Try to initialize Woodwork with the existing schema
                 if _is_series(result):
-                    valid_dtype = self._schema.logical_type._get_valid_dtype(
-                        type(result),
-                    )
+                    valid_dtype = self._schema.logical_type._get_valid_dtype()
                     if str(result.dtype) == valid_dtype:
                         result.ww.init(schema=self.schema, validate=False)
                     else:
@@ -568,7 +566,7 @@ def _validate_schema(schema, series):
     if not isinstance(schema, ColumnSchema):
         raise TypeError("Provided schema must be a Woodwork.ColumnSchema object.")
 
-    valid_dtype = schema.logical_type._get_valid_dtype(type(series))
+    valid_dtype = schema.logical_type._get_valid_dtype()
     if str(series.dtype) != valid_dtype:
         raise ValueError(
             f"dtype mismatch between Series dtype {series.dtype}, and {schema.logical_type} dtype, {valid_dtype}",

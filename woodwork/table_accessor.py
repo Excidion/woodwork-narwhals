@@ -450,9 +450,7 @@ class WoodworkTableAccessor:
     def physical_types(self):
         """A dictionary containing physical types for each column"""
         return {
-            col_name: self._schema.logical_types[col_name]._get_valid_dtype(
-                type(self._dataframe[col_name]),
-            )
+            col_name: self._schema.logical_types[col_name]._get_valid_dtype()
             for col_name in self._dataframe.columns
         }
 

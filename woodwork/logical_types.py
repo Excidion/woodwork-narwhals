@@ -53,9 +53,9 @@ class LogicalType(object, metaclass=LogicalTypeMetaClass):
         return str(self.__class__)
 
     @classmethod
-    def _get_valid_dtype(cls, series_type):
+    def _get_valid_dtype(self):
         """Return the dtype that is considered valid for a series with the given logical_type"""
-        return cls.primary_dtype
+        return self.primary_dtype
 
     def transform(self, series, null_invalid_values=False):
         """Converts the series dtype to match the logical type's if it is different."""
@@ -72,7 +72,7 @@ class LogicalType(object, metaclass=LogicalTypeMetaClass):
         """Validates that a logical type is consistent with the series dtype. Performs additional type
         specific validation, as required. When the series' dtype does not match the logical types' required dtype,
         raises a TypeValidationError."""
-        valid_dtype = self._get_valid_dtype(type(series))
+        valid_dtype = self._get_valid_dtype()
         if valid_dtype != str(series.dtype):
             raise TypeValidationError(
                 f"Series dtype '{series.dtype}' is incompatible with {self.type_string} LogicalType, try converting to {valid_dtype} dtype",
@@ -333,7 +333,7 @@ class Datetime(LogicalType):
                 date = date.replace(year=date.year - 100)
             return date
 
-        new_dtype = self._get_valid_dtype(type(series))
+        new_dtype = self._get_valid_dtype()
         series = self._remove_timezone(series)
         series_dtype = str(series.dtype)
 

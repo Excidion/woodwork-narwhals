@@ -97,11 +97,11 @@ def test_ordinal_transform(ordinal_transform_series) -> None:
 
 
 def test_get_valid_dtype(sample_series):
-    valid_dtype = Categorical._get_valid_dtype(type(sample_series))
-    assert valid_dtype == "category"
+    valid_dtype = Categorical._get_valid_dtype()
+    assert valid_dtype == "Categorical"
 
-    valid_dtype = Boolean._get_valid_dtype(type(sample_series))
-    assert valid_dtype == "bool"
+    valid_dtype = Boolean._get_valid_dtype()
+    assert valid_dtype == "Boolean"
 
 
 def test_latlong_transform(latlong_df):
